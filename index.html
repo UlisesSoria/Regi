@@ -166,8 +166,7 @@
     <div id="video-container" style="display:none; width: 90%; max-width: 800px; text-align: center;">
         <h1 style="color: var(--primary);">Prepárate para el mejor San Valentín que has vivido</h1>
         <div class="video-responsive">
-            <iframe src="https://www.youtube.com/embed/TYrcdhots80?rel=0&autoplay=1" title="YouTube video player"
-                frameborder="0"
+            <iframe id="youtube-iframe" src="" title="YouTube video player" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen></iframe>
         </div>
@@ -230,6 +229,7 @@
         function celebrar() {
             document.getElementById('final-step').style.display = 'none';
             document.getElementById('video-container').style.display = 'block';
+            document.getElementById('youtube-iframe').src = "https://www.youtube.com/embed/TYrcdhots80?rel=0&autoplay=1";
         }
     </script>
 </body>
