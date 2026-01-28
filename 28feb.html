@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>5 Meses Juntos ❤️</title>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --bg: #fff0f3;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .instruction {
+            position: absolute;
+            top: 20px;
+            color: var(--primary);
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        /* Contenedor de la Pila */
+        .stack-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+        }
+
+        .photo-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.6s;
+            user-select: none;
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 85%;
+            object-fit: cover;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .photo-card .caption {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Estado cuando se "lanza" la foto */
+        .photo-card.swiped {
+            transform: translateX(200vw) rotate(45deg) !important;
+            opacity: 0;
+        }
+
+        /* Propuesta Final - Oculta al inicio */
+        #final-step {
+            display: none;
+            text-align: center;
+            animation: fadeIn 1s;
+        }
+
+        .btn-group {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #yes-btn {
+            background: var(--primary);
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .video-responsive {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+            margin-top: 20px;
+        }
+
+        .video-responsive iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="instruction" id="hint">Haz clic en las fotos para descubrir nuestros momentos...</div>
+
+    <div class="stack-container" id="stack">
+    </div>
+
+    <div id="final-step">
+        <h1 style="color: var(--primary);">¡5 Meses Increíbles!</h1>
+        <p>Cada una de estas fotos es una razón por la que te agradezco hoy. <br>
+            Por compartir
+            5 meses grandiosos a tu lado, por ser mi compañera en cada momento, <br>
+            por ser mi persona favorita, por ser mi amor, por ser mi todo. </p>
+        <h1 style="color: var(--primary);">Te amo infinitamente, nena.</h1>
+        <h2>¿Me harías el honor de ser mi Valentines?</h2>
+        <div class="btn-group">
+            <button id="yes-btn" onclick="celebrar()">¡POR SUPUESTO! No hay otra opción, mi vida</button>
+        </div>
+    </div>
+
+
+    <div id="video-container" style="display:none; width: 90%; max-width: 800px; text-align: center;">
+        <h1 style="color: var(--primary);">Prepárate para el mejor San Valentín que has vivido</h1>
+        <div class="video-responsive">
+            <iframe src="https://www.youtube.com/embed/TYrcdhots80?rel=0&autoplay=1" title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+        </div>
+        <div style="margin-top: 20px;">
+            <a href="https://www.youtube.com/watch?v=TYrcdhots80" target="_blank"
+                style="display: inline-block; padding: 10px 20px; background-color: #ff0000; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                ▶ Ver en YouTube (Si no carga el video)
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 1. Configura tus 9 fotos aquí
+        const fotos = [
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/8.jpeg', txt: 'Donde todo empezó oficialmente...' },
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/1.jpeg', txt: 'Nuestra primer cerro esacaldo' },
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/6.jpeg', txt: 'Esa risa que me encanta' },
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/9.jpeg', txt: 'Un momento inolvidable' },
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/7.jpeg', txt: 'Gracias por apoyarme siempre' },
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/4.jpeg', txt: 'Contigo todo es mejor' },
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/5.jpeg', txt: 'Nuestra aventura favorita' },
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/3.jpeg', txt: '5 meses de pura felicidad' },
+            { url: 'https://github.com/UlisesSoria/Regi/raw/main/2.jpeg', txt: 'Por muchos más... ❤️' }
+        ];
+
+        const stack = document.getElementById('stack');
+        let counter = 0;
+
+        // Crear las tarjetas dinámicamente
+        fotos.forEach((foto, index) => {
+            const card = document.createElement('div');
+            card.className = 'photo-card';
+            // Rotación aleatoria leve para estilo "scattered"
+            const randomRot = (Math.random() - 0.5) * 10;
+            card.style.transform = `rotate(${randomRot}deg)`;
+            card.style.zIndex = fotos.length - index;
+
+            card.innerHTML = `
+                <img src="${foto.url}" alt="Recuerdo">
+                <div class="caption">${foto.txt}</div>
+            `;
+
+            card.onclick = () => {
+                card.classList.add('swiped');
+                counter++;
+                if (counter === fotos.length) {
+                    setTimeout(mostrarPropuesta, 600);
+                }
+            };
+
+            stack.appendChild(card);
+        });
+
+        function mostrarPropuesta() {
+            stack.style.display = 'none';
+            document.getElementById('hint').style.display = 'none';
+            document.getElementById('final-step').style.display = 'block';
+        }
+
+        function celebrar() {
+            document.getElementById('final-step').style.display = 'none';
+            document.getElementById('video-container').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
