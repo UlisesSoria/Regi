@@ -63,29 +63,31 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 });
 
 // API endpoint to get list of uploaded images
-app.get('/api/images', (req, res) => {
-    fs.readdir(uploadsDir, (err, files) => {
-        if (err) {
-            return res.status(500).json({ error: 'Failed to read uploads directory' });
-        }
+app.get('/api/images', async (req, res) => {
+    try {
+        const files = await fs.promises.readdir(uploadsDir);
         
-        // Filter only image files and get their stats
-        const imageFiles = files
+        // Filter only image files and get their stats asynchronously
+        const filePromises = files
             .filter(file => file !== '.gitkeep')
-            .map(file => {
+            .map(async file => {
                 const filePath = path.join(uploadsDir, file);
-                const stats = fs.statSync(filePath);
+                const stats = await fs.promises.stat(filePath);
                 return {
                     filename: file,
                     path: `/uploads/${file}`,
                     size: stats.size,
                     uploadedAt: stats.mtime
                 };
-            })
-            .sort((a, b) => b.uploadedAt - a.uploadedAt); // Sort by most recent
+            });
+        
+        const imageFiles = await Promise.all(filePromises);
+        imageFiles.sort((a, b) => b.uploadedAt - a.uploadedAt); // Sort by most recent
         
         res.json({ images: imageFiles });
-    });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to read uploads directory' });
+    }
 });
 
 // Error handling middleware

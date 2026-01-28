@@ -14,8 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
     imageInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
-            showPreview(file);
-            uploadBtn.disabled = false;
+            if (validateFile(file)) {
+                showPreview(file);
+                uploadBtn.disabled = false;
+            } else {
+                imageInput.value = '';
+                uploadBtn.disabled = true;
+            }
         }
     });
 
@@ -35,9 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const file = e.dataTransfer.files[0];
         if (file && file.type.startsWith('image/')) {
-            imageInput.files = e.dataTransfer.files;
-            showPreview(file);
-            uploadBtn.disabled = false;
+            if (validateFile(file)) {
+                // Create a new DataTransfer to set the files
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                imageInput.files = dataTransfer.files;
+                showPreview(file);
+                uploadBtn.disabled = false;
+            }
         }
     });
 
@@ -79,6 +89,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Validate file on client side
+    function validateFile(file) {
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        
+        if (!allowedTypes.includes(file.type)) {
+            showMessage('Invalid file type. Please select a JPEG, PNG, GIF, or WebP image.', 'error');
+            return false;
+        }
+        
+        if (file.size > maxSize) {
+            showMessage('File size too large. Maximum size is 5MB.', 'error');
+            return false;
+        }
+        
+        return true;
+    }
+
     // Show image preview
     function showPreview(file) {
         const reader = new FileReader();
@@ -86,6 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.onload = (e) => {
             preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
             preview.classList.add('active');
+        };
+        
+        reader.onerror = () => {
+            showMessage('Failed to read file. Please try again.', 'error');
+            preview.innerHTML = '';
+            preview.classList.remove('active');
         };
         
         reader.readAsDataURL(file);
@@ -123,18 +157,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // HTML escape function to prevent XSS
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     // Display gallery
     function displayGallery(images) {
         gallery.innerHTML = images.map(image => {
             const date = new Date(image.uploadedAt);
             const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
             const sizeInKB = (image.size / 1024).toFixed(2);
+            const escapedFilename = escapeHtml(image.filename);
+            const escapedPath = escapeHtml(image.path);
             
             return `
                 <div class="gallery-item">
-                    <img src="${image.path}" alt="${image.filename}" loading="lazy">
+                    <img src="${escapedPath}" alt="Uploaded image: ${escapedFilename}" loading="lazy">
                     <div class="gallery-item-info">
-                        <p class="filename">${image.filename}</p>
+                        <p class="filename">${escapedFilename}</p>
                         <p>${sizeInKB} KB</p>
                         <p>${formattedDate}</p>
                     </div>
