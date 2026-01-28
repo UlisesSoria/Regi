@@ -1,4 +1,5 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -43,12 +44,21 @@ const upload = multer({
     }
 });
 
+// Rate limiting for upload endpoint
+const uploadLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 20, // Limit each IP to 20 upload requests per windowMs
+    message: { error: 'Too many upload requests, please try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 // Serve static files
 app.use(express.static('public'));
 app.use('/uploads', express.static('uploads'));
 
 // API endpoint to upload image
-app.post('/api/upload', upload.single('image'), (req, res) => {
+app.post('/api/upload', uploadLimiter, upload.single('image'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
