@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regi - Image Upload</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📸 Regi - Image Upload</h1>
+            <p>Upload and manage your images</p>
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <h2>Upload Image</h2>
+                <form id="uploadForm">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-content">
+                            <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <p>Click to select an image or drag and drop</p>
+                            <p class="upload-hint">JPEG, PNG, GIF, WebP (Max 5MB)</p>
+                        </div>
+                        <input type="file" id="imageInput" name="image" accept="image/*" required>
+                    </div>
+                    
+                    <div id="preview" class="preview"></div>
+                    
+                    <button type="submit" id="uploadBtn" class="btn-primary" disabled>Upload Image</button>
+                </form>
+                
+                <div id="message" class="message"></div>
+            </section>
+
+            <section class="gallery-section">
+                <h2>Image Gallery</h2>
+                <div id="gallery" class="gallery">
+                    <p class="loading">Loading images...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
